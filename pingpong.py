@@ -39,12 +39,21 @@ class Ball(sprite.Sprite):
     def __init__(self, x, y, radius, speed, color):
         super().__init__()
         self.rect = draw.circle(window, color, (x,y), radius)
+        self.speed = speed
+        self.color = color
+        self.radius = radius
+        self.directionX = 1
+        self.directionY = 1
 
     def move(self):
-        pass
+        if self.rect.y < 0 or self.rect.y > (WIN_HEIGHT - (2 * self.radius)):
+            self.directionY = -1 * self.directionY 
+         
+        self.rect.x += self.speed
+        self.rect.y += self.speed * self.directionY 
 
     def draw(self):
-        pass
+        draw.circle(window, self.color, self.rect.center, self.radius) 
 
 
 #premenne hry
@@ -58,8 +67,9 @@ display.set_caption("Ping Pong")
 clock = time.Clock()
 
 #objekty hry
-player1 = Player(5,100, 30, 150, 10, RED)
-player2 = Player(WIN_WIDTH - 35, 100, 30, 150, 10, GREEN)
+player1 = Player(5,100, 20, 150, 10, RED)
+player2 = Player(WIN_WIDTH - 25, 100, 20, 150, 10, GREEN)
+ball = Ball(WIN_WIDTH // 2, WIN_HEIGHT // 2, 10, 5, WHITE)
 
 #herna slucka
 while run:
@@ -71,8 +81,10 @@ while run:
     window.fill(BLACK)
     player1.left_move()
     player2.right_move()
+    ball.move()
     player1.draw()
     player2.draw()
+    ball.draw()
 
     display.update()
     clock.tick(FPS)
