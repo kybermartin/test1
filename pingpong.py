@@ -34,6 +34,19 @@ class Player(sprite.Sprite):
     def draw(self):
         draw.rect(window, self.color, (self.rect))
 
+#trieda Ball
+class Ball(sprite.Sprite):
+    def __init__(self, x, y, radius, speed, color):
+        super().__init__()
+        self.rect = draw.circle(window, color, (x,y), radius)
+
+    def move(self):
+        pass
+
+    def draw(self):
+        pass
+
+
 #premenne hry
 run = True
 
