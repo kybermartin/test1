@@ -1,5 +1,7 @@
 from pygame import *
 
+font.init()
+
 #konstanty aplikacie
 WIN_WIDTH = 800
 WIN_HEIGHT = 600
@@ -44,16 +46,30 @@ class Ball(sprite.Sprite):
         self.radius = radius
         self.directionX = 1
         self.directionY = 1
-
+        
     def move(self):
         if self.rect.y < 0 or self.rect.y > (WIN_HEIGHT - (2 * self.radius)):
-            self.directionY = -1 * self.directionY 
+            self.directionY *= -1 
          
-        self.rect.x += self.speed
-        self.rect.y += self.speed * self.directionY 
+        self.rect.centerx += self.speed * self.directionX
+        self.rect.centery += self.speed * self.directionY 
 
     def draw(self):
         draw.circle(window, self.color, self.rect.center, self.radius) 
+
+#trieda vysledkov        
+class TextResultGame():
+    def __init__(self):
+        self.result_font = font.Font(None, 38)
+        self.text = "" 
+        self.result = self.result_font.render(self.text,True, WHITE)
+        
+    def set_victory(self, name):
+        self.result = self.result_font.render(f"Vyhral {name}",True, WHITE)
+
+    def draw(self):
+        window.blit(self.result, (WIN_WIDTH // 2, WIN_HEIGHT // 2))
+
 
 
 #premenne hry
@@ -70,6 +86,8 @@ clock = time.Clock()
 player1 = Player(5,100, 20, 150, 10, RED)
 player2 = Player(WIN_WIDTH - 25, 100, 20, 150, 10, GREEN)
 ball = Ball(WIN_WIDTH // 2, WIN_HEIGHT // 2, 10, 5, WHITE)
+victory = TextResultGame()
+
 
 #herna slucka
 while run:
@@ -77,6 +95,19 @@ while run:
     for e in event.get():
         if e.type == QUIT:
             run = False
+#kolizie
+    if sprite.collide_rect(ball, player2):
+        ball.directionX *= -1
+    
+    if sprite.collide_rect(player1, ball):
+        ball.directionX *= -1
+    
+    if ball.rect.x > WIN_WIDTH:
+        victory.set_victory("Red Player")
+    
+    if ball.rect.x < 0:
+        victory.set_victory("Green Player")
+
 
     window.fill(BLACK)
     player1.left_move()
@@ -85,6 +116,7 @@ while run:
     player1.draw()
     player2.draw()
     ball.draw()
+    victory.draw()
 
     display.update()
     clock.tick(FPS)
