@@ -38,13 +38,16 @@ class Player(sprite.Sprite):
 class Ball(sprite.Sprite):
     def __init__(self, x, y, radius, speed, color):
         super().__init__()
+        self.radius = radius
+        self.speed = speed
+        self.color = color
         self.rect = draw.circle(window, color, (x,y), radius)
 
-    def move(self):
+    def update(self):
         pass
 
     def draw(self):
-        pass
+        draw.circle(window, self.color, (self.rect.x,self.rect.y), self.radius)
 
 
 #premenne hry
@@ -60,6 +63,8 @@ clock = time.Clock()
 #objekty hry
 player1 = Player(5,100, 30, 150, 10, RED)
 player2 = Player(WIN_WIDTH - 35, 100, 30, 150, 10, GREEN)
+ball = Ball(WIN_WIDTH // 2, WIN_HEIGHT // 2, 10, 10, WHITE)
+
 
 #herna slucka
 while run:
@@ -73,6 +78,7 @@ while run:
     player2.right_move()
     player1.draw()
     player2.draw()
+    ball.draw()
 
     display.update()
     clock.tick(FPS)
